@@ -43,6 +43,18 @@ cp env.example .env
 docker-compose up -d
 ```
 
+**Сброс и очистка базы данных:**
+
+Для полной очистки базы данных (удаление всех данных и volumes):
+
+```bash
+docker-compose down
+
+docker-compose down -v
+
+docker-compose up -d
+```
+
 4. **Запустите приложение:**
 
 В режиме разработки (с автоперезагрузкой):
