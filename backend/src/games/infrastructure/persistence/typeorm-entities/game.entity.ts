@@ -5,25 +5,23 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
-  ManyToOne,
-  JoinColumn,
   Check,
 } from 'typeorm';
-import { GameStatus } from '../types/game-state.types';
+import { GameStatus } from '@/games/domain/entities/game.entity';
 import { GamePlayer } from './game-player.entity';
 import { GameCell } from './game-cell.entity';
 
 @Entity('games')
 @Check(`"field_size" BETWEEN 2 AND 5`)
-export class Game {
+export class GameOrmEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ type: 'smallint', name: 'field_size' })
-  fieldSize: number; // размер поля NxN (2..5)
+  fieldSize: number;
 
   @Column({ type: 'smallint', name: 'diamonds_count' })
-  diamondsCount: number; // количество алмазов (1..fieldSize*fieldSize, нечётное)
+  diamondsCount: number;
 
   @Column({
     type: 'varchar',
@@ -35,10 +33,6 @@ export class Game {
 
   @Column({ type: 'uuid', nullable: true, name: 'turn_player_id' })
   turnPlayerId: string | null;
-
-  @ManyToOne(() => GamePlayer, { nullable: true })
-  @JoinColumn({ name: 'turn_player_id' })
-  turnPlayer: GamePlayer | null;
 
   @Column({ type: 'smallint', name: 'diamonds_found', default: 0 })
   diamondsFound: number;
@@ -52,9 +46,9 @@ export class Game {
   @Column({ type: 'timestamptz', nullable: true, name: 'finished_at' })
   finishedAt: Date | null;
 
-  @OneToMany(() => GamePlayer, (player) => player.game, { cascade: true })
+  @OneToMany(() => GamePlayer, (player) => player.game)
   players: GamePlayer[];
 
-  @OneToMany(() => GameCell, (cell) => cell.game, { cascade: true })
+  @OneToMany(() => GameCell, (cell) => cell.game)
   cells: GameCell[];
 }

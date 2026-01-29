@@ -5,12 +5,14 @@ import {
   ManyToOne,
   JoinColumn,
   Unique,
+  Index,
 } from 'typeorm';
-import { Game } from './game.entity';
-import { GamePlayer } from './game-player.entity';
+import { GameOrmEntity } from './game.entity';
 
 @Entity('game_cells')
 @Unique(['gameId', 'x', 'y'])
+@Index(['gameId'])
+@Index(['gameId', 'x', 'y'])
 export class GameCell {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -18,28 +20,26 @@ export class GameCell {
   @Column({ type: 'uuid', name: 'game_id' })
   gameId: string;
 
-  @ManyToOne(() => Game, (game) => game.cells, { onDelete: 'CASCADE' })
+  @ManyToOne(() => GameOrmEntity, (game) => game.cells, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'game_id' })
-  game: Game;
+  game: GameOrmEntity;
 
   @Column({ type: 'smallint' })
-  x: number; // 0..fieldSize-1
+  x: number;
 
   @Column({ type: 'smallint' })
-  y: number; // 0..fieldSize-1
+  y: number;
 
   @Column({ type: 'boolean', name: 'is_diamond', default: false })
   isDiamond: boolean;
 
   @Column({ type: 'smallint', name: 'adjacent_diamonds', default: 0 })
-  adjacentDiamonds: number; // 0..8
+  adjacentDiamonds: number;
 
   @Column({ type: 'uuid', nullable: true, name: 'opened_by_player_id' })
   openedByPlayerId: string | null;
-
-  @ManyToOne(() => GamePlayer, { nullable: true })
-  @JoinColumn({ name: 'opened_by_player_id' })
-  openedByPlayer: GamePlayer | null;
 
   @Column({ type: 'timestamptz', nullable: true, name: 'opened_at' })
   openedAt: Date | null;
