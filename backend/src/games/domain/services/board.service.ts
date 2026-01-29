@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { shuffleArray } from '../utils/rng.util';
-import { countAdjacentDiamonds } from '../utils/board.util';
+import { shuffleArray } from '../../utils/rng.util';
+import { countAdjacentDiamonds } from '../../utils/board.util';
 
+/**
+ * Доменный сервис для работы с игровым полем
+ */
 @Injectable()
 export class BoardService {
   /**
@@ -15,7 +18,6 @@ export class BoardService {
       .fill(null)
       .map(() => Array(fieldSize).fill(false));
 
-    // Создаем список всех возможных позиций
     const positions: Array<[number, number]> = [];
     for (let x = 0; x < fieldSize; x++) {
       for (let y = 0; y < fieldSize; y++) {
@@ -23,7 +25,6 @@ export class BoardService {
       }
     }
 
-    // Перемешиваем и выбираем первые diamondsCount позиций
     const shuffled = shuffleArray(positions);
     for (let i = 0; i < diamondsCount; i++) {
       const [x, y] = shuffled[i];

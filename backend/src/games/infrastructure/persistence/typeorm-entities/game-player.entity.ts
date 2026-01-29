@@ -6,11 +6,13 @@ import {
   JoinColumn,
   CreateDateColumn,
   Unique,
+  Index,
 } from 'typeorm';
-import { Game } from './game.entity';
+import { GameOrmEntity } from './game.entity';
 
 @Entity('game_players')
 @Unique(['gameId', 'slot'])
+@Index(['gameId'])
 export class GamePlayer {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -18,9 +20,11 @@ export class GamePlayer {
   @Column({ type: 'uuid', name: 'game_id' })
   gameId: string;
 
-  @ManyToOne(() => Game, (game) => game.players, { onDelete: 'CASCADE' })
+  @ManyToOne(() => GameOrmEntity, (game) => game.players, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'game_id' })
-  game: Game;
+  game: GameOrmEntity;
 
   @Column({ type: 'smallint' })
   slot: number;
